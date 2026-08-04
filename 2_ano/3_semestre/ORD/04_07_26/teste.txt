@@ -1,0 +1,4 @@
+Watermann1|Pedro1|Av. Ivaí1|Paiçandu1|PR|87140000|
+Watermann2|Pedro2|Av. Ivaí2|Paiçandu2|PR|
+Watermann3|Pedro3|Av. Ivaí3|Paiçandu3|Paraná|87140000|
+Watermann4|Pedro4|Av. Ivaí4|Paiçandu4|PR|87140-000|

@@ -1,0 +1,50 @@
+b 484
+b 999999
+i 1050|Celeste|2018|Platformer|Matt Makes Games|PC|
+i 1050|Celeste Repetido|2019|Platformer|Matt Makes Games|PC|
+b 1050
+i 348|Duplicata de Existente|2020|Teste|Teste|Teste|
+b 348
+i 1051|Hades|2020|Roguelike|Supergiant Games|PC|
+i 1052|Hollow Knight|2017|Metroidvania|Team Cherry|PC|
+i 1053|Stardew Valley|2016|Simulation|ConcernedApe|PC|
+i 1054|Undertale|2015|RPG|Toby Fox|PC|
+b 1051
+b 1052
+i 1051|Hades Repetido|2021|Roguelike|Supergiant Games|PC|
+b 88888
+i 100|Duplicata de Existente 2|2020|Teste|Teste|Teste|
+b 100
+i 1055|Portal 2|2011|Puzzle-Platformer|Valve|PC|
+b 1055
+i 1055|Portal 2 Repetido|2011|Puzzle-Platformer|Valve|PC|
+i 2000|Jogo 2000|2000|Teste|Teste|Teste|
+i 2001|Jogo 2001|2001|Teste|Teste|Teste|
+i 2002|Jogo 2002|2002|Teste|Teste|Teste|
+i 2003|Jogo 2003|2003|Teste|Teste|Teste|
+i 2004|Jogo 2004|2004|Teste|Teste|Teste|
+i 2005|Jogo 2005|2005|Teste|Teste|Teste|
+i 2006|Jogo 2006|2006|Teste|Teste|Teste|
+i 2007|Jogo 2007|2007|Teste|Teste|Teste|
+i 2008|Jogo 2008|2008|Teste|Teste|Teste|
+i 2009|Jogo 2009|2009|Teste|Teste|Teste|
+i 2010|Jogo 2010|2010|Teste|Teste|Teste|
+b 2000
+b 2005
+b 2010
+i 2005|Jogo 2005 Repetido|2005|Teste|Teste|Teste|
+i 3000|Jogo Ordem Decrescente A|2000|Teste|Teste|Teste|
+i 2999|Jogo Ordem Decrescente B|2000|Teste|Teste|Teste|
+i 2998|Jogo Ordem Decrescente C|2000|Teste|Teste|Teste|
+i 2997|Jogo Ordem Decrescente D|2000|Teste|Teste|Teste|
+i 2996|Jogo Ordem Decrescente E|2000|Teste|Teste|Teste|
+b 2997
+i -1|Jogo Chave Negativa (sentinela NULO)|2020|Teste|Teste|Teste|
+b -1
+i 0|Jogo Chave Zero|2020|Teste|Teste|Teste|
+b 0
+i 0|Jogo Chave Zero Repetido|2020|Teste|Teste|Teste|
+b 1053
+b 1054
+b 4242424
+i 997|Duplicata Final Existente|1996|Teste|Teste|Teste|

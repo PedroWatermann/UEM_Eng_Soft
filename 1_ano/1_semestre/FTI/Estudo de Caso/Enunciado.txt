@@ -1,0 +1,78 @@
+SIG - Saúde: Implementação em hospitais e clínicas para gestão de prontuários, agendamento de consultas e sistema de apoio à decisão clínica.
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+O que é
+esperado do estudo de caso que o grupo deve desenvolver sobre a aplicação de
+SIs: Um estudo de caso bem-sucedido deverá incluir
+os seguintes elementos:
+
+
+Introdução:
+
+Breve descrição da área do mercado escolhida.
+Importância dos Sistemas de Informação na área em questão.
+
+Objetivos:
+
+Definição clara dos objetivos do estudo de caso.
+Perguntas principais que o estudo visa responder.
+
+Metodologia:
+
+Descrição dos métodos usados para coletar dados.
+Fontes de dados (entrevistas, questionários, documentos, etc.).
+
+Breve descrição do Sistema de Informação sorteado para o seu grupo:
+
+Detalhamento do SI escolhido (SPT, SIG, SAD, SAE).
+Funcionalidades principais do sistema.
+Tecnologias utilizadas.
+
+Contexto de Implementação:
+
+Descrição da organização onde o SI foi implementado.
+Processo de implementação do SI.
+Desafios enfrentados durante a implementação.
+
+Análise de Resultados:
+
+Impactos do SI na organização (melhorias de processos, maior
+eficiência, etc.).
+Feedback de usuários do sistema.
+Comparação antes e depois da implementação.
+
+Conclusão:
+
+Resumo das principais descobertas.
+Lições aprendidas.
+Recomendações para futuras implementações.
+
+Referências:
+
+Citações de todas as fontes utilizadas no estudo de caso.
+* Mínimo de 5 e máximo de 10 páginas de conteúdo.
+* A entrega deve ser feita, exclusivamente, como retorno a esta atividade no Classroom, em formato .Docx ou .Pdf;
+
+
+
+
+Perguntas que o grupo deve buscar responder em
+seu estudo e apresentação:
+
+
+Qual
+foi o problema ou necessidade que levou à implementação do SI?
+Qual a motivação para a escolha do SI específico (SPT, SIG, SAD,
+SAE)?
+Como o SI foi integrado aos processos existentes da organização?
+Quais foram os principais desafios durante a implementação?
+Que benefícios específicos a organização obteve após a
+implementação do SI?
+Como os usuários do SI avaliam a sua eficácia e facilidade de uso?
+Houve algum impacto negativo ou inesperado após a implementação?
+Quais são as melhores práticas recomendadas para outras
+organizações que considerem implementar um SI similar?
+
+Critérios de Avaliação:
+Corretude das informações, Qualidade e organização do texto (ABNT), análise do atendimento aos elementos recomendados no enunciado, Entrega dentro do prazo estabelecido.

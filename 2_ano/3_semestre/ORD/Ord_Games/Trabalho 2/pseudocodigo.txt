@@ -1,0 +1,91 @@
+# Busca na arvore B
+ORDEM = 0
+Nulo = -1 # significa que chegou na folha
+class Pagina:
+    def __init__(self) -> None:
+        self.numChaves: int = 0
+        self.chaves: list = [Nulo]*(ORDEM-1)
+        self.filhos: list = [Nulo]*ORDEM
+
+def buscaNaPagina(chave, pag):
+    pos = 0
+    while pos < pag.numChaves and chave > pag.chaves[pos]:
+        pos += 1
+    if pos < pag.numChaves and chave > pag.chaves[pos]:
+        return True, pos
+    else:
+        return False, pos
+    
+# Pesquisa na Arvore B
+def buscaNaArvore(chave, rrn):
+    if rrn == Nulo:
+        return False, Nulo, Nulo 
+    else:
+        pag = leiapag(rrn)
+        achou, pos = buscaNaPagina(chave, pag)
+    if achou:
+        return True,rrn, pos
+    else:
+        return buscaNaArvore(chave, pag.filhos[pos])
+    
+# inserção na arvore B
+def insereChave(chave, rrnAtual):
+    if rrnAtual == Nulo:
+        chavePro = chave
+        filhoDirpro = Nulo
+        return chavePro, filhoDirpro, True
+    else:
+        pag = leiaPag(rrnAtual)
+        achou, pos = buscaNaPagina(chave, pag)
+    
+    if achou:
+       raise ValueError("Chave duplicada")
+
+    chavePro, filhoDirpro, promo = insereChave(chave, pag.filhos[pos]) 
+
+    if not promo:
+        return Nulo, Nulo, False
+    else:
+        if pag != -1:
+            pag = chavePro, filhoDirpro
+            escrevePag(rrnAtual, Pag)
+            return Nulo, Nulo, False
+        else:
+            chavePro,filhoDirpro,pag,novaPag = divide(chavePro,filhoDirpro,pag)
+            escrevePag(rrnAtual, pag)
+            escreveNovaPag(filhoDirpro)
+            return chavePro, filhoDirpro, True
+
+
+
+
+
+
+
+
+
+
+ORDEM = 378
+numChaves = 2
+4 filhos e 3 registros
+i 3i 3i 3i 3i 3i
+
+chave = I
+filho = 3
+
+                [J, L,  ]
+7[A, C, H]  8[K,  ,  ]  0[8, 9,  ]  5[ ,  ,  ]
+
+257-17805
+
+Pagina(
+    2,
+    [J, L, -1],
+    [7, 8, 0, 5]
+)
+
+Pagina(
+    3,
+    [A, C, H]
+    [-1, -1, -1, -1]
+)
