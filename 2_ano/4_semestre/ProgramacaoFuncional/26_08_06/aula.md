@@ -1,0 +1,80 @@
+# Cálculo Lambda
+
+## Equivalência α
+
+* É a equivalência entre funções lambdas, por exemplo, (λx.x)(λy.xy) === (λz.z)(λy.xy)
+
+## Redução β
+
+* É quando aplicamos uma função a um argumento, substituímos todas as instâncias da variável ligada no corpo pelo argumento
+* Exemplos de redução e aplicação da função identidade:
+  * (λx.x)2 -> x[x := 2] = 2
+  * (λx.x + 1)2 -> x + 1[x := 2] = 2 + 1 = 3
+
+## Expressões
+
+* São associativas à esquerda, ou seja, MNO === (MN)O
+* O corpo se extende ao máximo à direita, ou seja, λx.MN === λx.(MN) e não (λx.M)N
+* Uma expressão que não pode ser mais reduzida está em sua forma normal
+* Podemos reduzir uma expressão de formas diferentes, mas obtendo mesmo resultado:
+  * (λx.(λy.xy)a)b
+    * (λy.by)a -> ba
+    * (λx.xa)b -> ba
+
+## Variáveis livres e ligadas
+
+* É mais fácil de ser representado com exemplo', mas As variáveis livres de um termo são as variáveis que não estão ligadas por uma abstração lambda
+
+| Expressão | Conclusão |
+| -------------- | --------- |
+| λx.xy | x ligada e y livre |
+| λx.(λy.xy) | x e y ligadas |
+| (λx.xt)(λy.yz) | t e z livres |
+| (λx.x)(λy.yx) | x ligada na primeira abstração, mas livre na segunda |
+
+## Substituições
+
+* Considere a expressão (λx.(λy.xy))y
+  * Uma substituição nesse caso poderia misturar os y, resultando em λy.yy
+  * Se substituirmos por t, teremos:
+    * (λx.(λt.xt))y -> (λt.xt)[x := y] === λt.yt === λx.yx
+
+## Currying
+
+* Por definição, lambda só recebe um argumento, mas se utilizarmos o currying podemos aninhar lambdas para simulem mais de um argumento
+* Exemplo:
+  * (λx.(λy.x + y)2)3
+    * ((λx.x + y)[y := 2])3 -> (λx.x + 2)3 -> x + 2[x := 3] -> 3 + 2 = 5
+    * ((λy.x + y)[x := 3])2 -> (λx.3 + y)2 -> 3 + y[y := 2] -> 3 + 2 = 5
+
+## Aritmética
+
+* Devemos definir os números e operações como funções
+* Podemos definir o 0 como λs.(λz.z), simplificado como λsz.z
+* Para definirmos o 1, aplicamos s uma vez:
+  * λs.(λz.(sz)) -> λsz.s(sz)
+* Para definirmos o 2, aplicamos s duas vezes:
+  * λs.(λz.(s(sz))) -> λsz.s(sz)
+* Para definirmos o 3, aplicamos s tres vezes e assim por diante:
+  * λs.(λz.(s(s(sz)))) -> λsz.s(s(sz))
+* A função sucessora pode ser definida na forma
+  * λw.(λy.(λx.(y(wyx)))) -> λwyx.y(wyx) ==> isso pode ser descrito como y aplicado w vezes a x
+    * Se aplicarmos a função de definição do 0 à função sucessora teremos:
+      * Forma simplicada:
+        * λwyx.y(wyx)(λsz.z)
+          * λyx.y((λsz.z)yx)
+          * λyx.y((λs.(λz.z)y)x)
+          * λyx.y((λz.z)x)
+          * λyx.y(x)
+          * λyx.yx === λsz.sz
+      * Forma estendida:
+        * λwyx.y(wyx)(λsz.z)
+          * λw.(λy.(λx.y(wyx)))(λsz.z)
+          * λy.(λx.y(wyx))[w := (λsz.z)]
+          * λy.(λx.y((λsz.z)yx))
+            * (λsz.z)(yx) resolvendo a expressão interna
+            * (λs.(λz.z)y)x
+            * (λz.z[s := y])(x)
+            * (λz.z)(x)
+            * z[z := x] === x
+          * λy.(λx.y(x)) === λy.(λx.yx) === λyx.yx === λsz.sz

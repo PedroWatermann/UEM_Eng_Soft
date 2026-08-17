@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="https://jakarta.ee/xml/ns/persistence" version="3.1">
+
+    <persistence-unit name="rpgPooPU" transaction-type="RESOURCE_LOCAL">
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+
+        <properties>
+            <property name="jakarta.persistence.jdbc.driver" value="org.postgresql.Driver"/>
+
+            <!-- ESSA é a linha que decide se o Java cria as tabelas -->
+            <property name="hibernate.hbm2ddl.auto" value="update"/>
+            <!-- create → deleta e recria tudo a cada execução -->
+            <!-- update → cria o que não existe e tenta atualizar colunas -->
+            <!-- validate → só confere se o schema bate, não muda nada -->
+            <!-- none → você cuida manualmente do SQL -->
+
+            <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
+            <property name="hibernate.show_sql" value="true"/>
+            <property name="hibernate.format_sql" value="true"/>
+        </properties>
+    </persistence-unit>
+</persistence>
