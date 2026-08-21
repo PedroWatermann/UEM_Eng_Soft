@@ -1,4 +1,4 @@
-# Processos e Threads
+# Processos
 
 ## Estrutura
 
