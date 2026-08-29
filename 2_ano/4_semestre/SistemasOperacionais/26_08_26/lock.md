@@ -57,7 +57,7 @@ pthread_cond_t condc; //sinal que o produtor envia quando retira algo do buffer
 // * -> ponteiro
 void * p (void * a | {
   while true {
-    pthread_mutex_lock(mutex); //mutex realiza a exclusão mútua, j´q eu o buffer nao pode ser acessado simultaneamente
+    pthread_mutex_lock(mutex); //mutex realiza a exclusão mútua, já eu o buffer não pode ser acessado simultaneamente
 
     while(contador == TB) //TB -> tamanho do buffer
       pthread_cond_wait(condp, mutex);
