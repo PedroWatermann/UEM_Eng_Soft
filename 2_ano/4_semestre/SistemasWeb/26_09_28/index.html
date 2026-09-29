@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTML - Aula 3</title>
+
+    <style>
+        /* body {
+            background-color: black;
+            color: white;
+        } */
+    </style>
+</head>
+
+<body>
+    <h1>Reply to ad</h1>
+
+    <p>Use the following form to respond to the ad</p>
+
+    <form action="" method="post">
+        <table>
+            <tr>
+                <td>
+                    <label for="to1">To</label>
+                </td>
+                <td>
+                    <input type="email" name="email" id="email1">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="to2">To</label>
+                </td>
+                <td>
+                    <input type="email" name="email" id="email2">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="subject">Subject</label>
+                </td>
+                <td>
+                    <input type="text">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="body">Body</label>
+                </td>
+                <td>
+                    <textarea name="body" id="body" cols="30" rows="10"></textarea>
+                </td>
+            </tr>
+        </table>
+        <button type="submit">Send email</button>
+    </form>
+
+    <br>
+    <hr>
+    <br>
+
+    <h1>Register your opinion</h1>
+
+    <p>How well do you rate the information on this site (where 1 is very poor)?</p>
+
+    <form action="" method="post">
+        <table>
+            <tr>
+                <td>
+                    <input type="radio" name="rate" id="one">
+                </td>
+                <td>
+                    <input type="radio" name="rate" id="two">
+                </td>
+                <td>
+                    <input type="radio" name="rate" id="three">
+                </td>
+                <td>
+                    <input type="radio" name="rate" id="four">
+                </td>
+                <td>
+                    <input type="radio" name="rate" id="five">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="one">1</label>
+                </td>
+                <td>
+                    <label for="two">2</label>
+                </td>
+                <td>
+                    <label for="three">3</label>
+                </td>
+                <td>
+                    <label for="four">4</label>
+                </td>
+                <td>
+                    <label for="five">5</label>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label>Very poor</label>
+                </td>
+                <td>
+                    <label>Poor</label>
+                </td>
+                <td>
+                    <label>Average</label>
+                </td>
+                <td>
+                    <label>Good</label>
+                </td>
+                <td>
+                    <label>Very good</label>
+                </td>
+            </tr>
+        </table>
+        <button type="submit">Vote now</button>
+    </form>
+</body>
+
+</html>
