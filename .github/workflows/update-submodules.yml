@@ -1,0 +1,28 @@
+name: Atualizar submodules
+
+on:
+  schedule:
+    - cron: "0 6 * * *"
+  workflow_dispatch:
+  repository_dispatch:
+    types: [submodule-updated]
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+          token: ${{ secrets.SUBMODULES_PAT }}
+
+      - name: Atualizar submodules
+        run: git submodule update --remote --merge
+
+      - name: Commit e push
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@users.noreply.github.com"
+          git add -A
+          git diff --cached --quiet || git commit -m "Atualiza submodules"
+          git push
