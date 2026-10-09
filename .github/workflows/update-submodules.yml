@@ -17,7 +17,7 @@ jobs:
           token: ${{ secrets.SUBMODULES_PAT }}
 
       - name: Atualizar submodules
-        run: git submodule update --remote --merge
+        run: git submodule update --remote
 
       - name: Commit e push
         run: |
