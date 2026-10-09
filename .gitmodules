@@ -1,3 +1,4 @@
 [submodule "2_ano/4_semestre/SistemasWeb/Trabalhos/AuAuControl"]
 	path = 2_ano/4_semestre/SistemasWeb/Trabalhos/AuAuControl
 	url = https://github.com/PedroWatermann/AuAuControl.git
+	branch = master
