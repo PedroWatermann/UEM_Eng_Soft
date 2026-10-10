@@ -1,0 +1,392 @@
+%% -----------------------------------------------------------
+%% Relatorio.tex
+%% Relatório do Trabalho Prático — Simulador de Paginação
+%% Disciplina: Sistemas Operacionais — Ciência da Computação — UEM
+%%
+%% Formatação: template SBC (sbc-template.sty).
+%% Compilar com pdflatex (inputenc utf8) + bibtex.
+%% -----------------------------------------------------------
+
+\documentclass[12pt]{article}
+
+\usepackage{sbc-template}
+
+\usepackage{graphicx,url}
+
+\usepackage[brazilian]{babel}
+\usepackage[T1]{fontenc} % Codificação para fontes com suporte a caracteres acentuados
+\usepackage[utf8]{inputenc} % Codificação UTF-8 (necessário apenas para pdflatex)
+\usepackage{multicol}
+\usepackage{multirow}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{textcomp}
+\usepackage{verbatim}
+\usepackage[table,xcdraw]{xcolor}
+\usepackage[shortlabels]{enumitem}
+\usepackage{comment} % pacote de comentarios
+%% O cabeçalho do SBGames não se aplica a um relatório de disciplina.
+%% Para reativá-lo, descomente as duas linhas marcadas com [SBGames]
+%% e preencha sbgames_info.tex.
+%\usepackage{sbgames} % [SBGames]
+
+%previne hifenização
+\tolerance=1
+\emergencystretch=\maxdimen
+\hyphenpenalty=10000
+\hbadness=10000
+
+\sloppy
+
+%% listas mais compactas, para caber no limite de páginas
+\setlist[itemize]{topsep=3pt,itemsep=1pt,parsep=0pt,leftmargin=*}
+\setlist[enumerate]{topsep=3pt,itemsep=1pt,parsep=0pt,leftmargin=*}
+
+%\input{sbgames_info} % [SBGames]
+
+\title{Simulador de Paginação de Memória Virtual:
+planejamento do trabalho \\
+\medskip
+\small{
+    \textit{Title: A Virtual Memory Paging Simulator: work plan}
+}
+}
+
+\author{Pedro Luiz Pereira Zampar\inst{1}, Pedro Augusto dos Santos Watermann\inst{1}}
+
+\address{Departamento de Informática -- Universidade Estadual de Maringá (UEM)\\
+  Av. Colombo, 5790 -- 87.020-900 -- Maringá -- PR -- Brasil
+  \email{ra145117@uem.br, ra145121@uem.br}
+}
+
+
+\begin{document}
+
+\maketitle
+
+\thispagestyle{plain}
+
+\begin{abstract}
+This document reports the plan for a program that simulates how the operating
+system manages memory when it does not fit entirely in physical memory. Given a
+page reference string and a number of frames, the simulator counts page faults
+and prints the state of the frames at each reference. The same run is repeated
+under FIFO, LRU, Optimal, Second Chance and LFU, so that the five policies can
+be compared as the amount of memory varies. We describe the file layout, the
+function signatures, the expected behaviour of the program, the tests we intend
+to run --- including Belady's Anomaly --- and the division of the work.
+\end{abstract}
+
+\keywords{Operating Systems, Virtual Memory, Paging, Page Replacement,
+Belady's Anomaly.}
+
+\begin{resumo}
+Este documento registra o planejamento de um programa que simula como o sistema
+operacional gerencia a memória quando ela não cabe toda na memória física. A
+partir de uma sequência de páginas acessadas e de um número de quadros, o
+simulador conta as faltas de página e mostra o estado dos quadros a cada acesso.
+A mesma execução é repetida com FIFO, LRU, Ótimo, Segunda Chance e LFU, de modo
+a comparar as cinco políticas variando a quantidade de memória. Descrevemos a
+organização dos arquivos, as assinaturas das funções, como o programa deve se
+comportar, os testes que pretendemos fazer --- incluindo a Anomalia de Belády
+--- e a divisão do trabalho.
+\end{resumo}
+
+\palavraschave{Sistemas Operacionais, Memória Virtual, Paginação, Substituição
+de Páginas, Anomalia de Belády.}
+
+% =====================================================================
+\section{O que vamos construir}
+\label{sec:intro}
+
+O trabalho é um programa que simula como o sistema operacional gerencia a
+memória quando ela não cabe toda na memória física. O programa recebe uma lista
+de páginas que o processo acessou e a quantidade de quadros disponíveis. A
+partir disso, ele conta quantas vezes a página pedida não estava na memória (as
+faltas de página) e mostra o passo a passo do que aconteceu.
+
+A ideia é rodar essa mesma simulação com cinco algoritmos diferentes de
+substituição e comparar qual deles gera menos faltas, variando também o tamanho
+da memória. Este documento registra como entendemos o problema e como
+pretendemos organizar o programa. Alguns pontos ainda vão ser ajustados depois
+das aulas sobre o assunto.
+
+\subsection{Entrada e saída}
+\label{sec:entrada-saida}
+
+\begin{itemize}
+    \item \textbf{Entrada:} um arquivo com a sequência de páginas acessadas
+    (ex.: \texttt{7 0 1 2 0 3 0 4 2 3 0 3 2 1 2 0 1 7 0 1}) e o número de
+    quadros da memória física.
+    \item \textbf{Saída:} o total de faltas de página, o traço mostrando o
+    estado dos quadros a cada acesso e um gráfico de faltas por número de
+    quadros.
+\end{itemize}
+
+% =====================================================================
+\section{Conceitos que precisamos usar}
+\label{sec:conceitos}
+
+A memória virtual é dividida em blocos de tamanho fixo chamados páginas, e a
+memória física é dividida em blocos do mesmo tamanho chamados quadros
+\cite{silberschatz2018}. Quando o programa acessa uma página que não está em
+nenhum quadro, acontece uma falta de página. Se ainda houver quadro livre, a
+página só é carregada. Se a memória estiver cheia, é preciso escolher uma página
+para sair, e é aí que entram os algoritmos \cite{tanenbaum2015}, resumidos na
+Tabela~\ref{tab:algoritmos}.
+
+\begin{table}[!ht]
+\centering
+\caption{Os cinco algoritmos de substituição que vamos implementar.}
+\label{tab:algoritmos}
+\small
+\begin{tabular}{p{3.0cm}p{10.2cm}}
+\hline
+\textbf{Algoritmo} & \textbf{Qual página ele escolhe para sair} \\
+\hline
+FIFO & A que entrou na memória há mais tempo, sem olhar se ela está sendo usada \\
+LRU & A que ficou mais tempo sem ser acessada \\
+Ótimo & A que vai demorar mais para ser usada de novo (precisa conhecer o futuro) \\
+Segunda Chance & Como o FIFO, mas dá uma chance extra para páginas acessadas recentemente \\
+LFU & A que foi acessada menos vezes \\
+\hline
+\end{tabular}
+\end{table}
+
+\textbf{Anomalia de Belády:} o esperado é que aumentar a memória diminua as
+faltas de página. Existe um caso em que isso não acontece e o FIFO piora com
+mais quadros \cite{belady1969}. Um dos objetivos do trabalho é reproduzir esse
+caso e mostrar que ele não aparece no LRU nem no Ótimo \cite{arpaci2018}.
+
+% =====================================================================
+\section{Organização dos arquivos}
+\label{sec:organizacao}
+
+Cada algoritmo fica em um arquivo separado, e todos usam a mesma assinatura de
+função. Assim, para trocar de algoritmo ou mudar o número de quadros, não
+precisamos mexer no resto do programa.
+
+{\scriptsize
+\begin{verbatim}
+paging-simulator/
+|-- src/
+|   |-- main.c            /* le os parametros e chama o algoritmo   */
+|   |-- simulador.h       /* tipos e assinaturas usados por todos   */
+|   |-- sequencia.c       /* le o arquivo de entrada                */
+|   |-- traco.c           /* imprime o traco e o resumo             */
+|   |-- fifo.c            /* algoritmo FIFO                         */
+|   |-- lru.c             /* algoritmo LRU                          */
+|   |-- optimal.c         /* algoritmo Otimo                        */
+|   |-- second_chance.c   /* algoritmo Segunda Chance               */
+|   `-- lfu.c             /* algoritmo LFU                          */
+|-- entradas/             /* sequencias de teste                    */
+|-- analise.py            /* gera os graficos a partir dos dados    */
+`-- RELATORIO.pdf
+\end{verbatim}
+}
+
+% =====================================================================
+\section{Funções e assinaturas}
+\label{sec:funcoes}
+
+\subsection{Tipos usados por todos os arquivos}
+\label{sec:tipos}
+
+A primeira estrutura guarda a sequência de páginas lida do arquivo de entrada:
+
+{\scriptsize
+\begin{verbatim}
+typedef struct {
+    int *paginas;   /* paginas na ordem em que foram acessadas */
+    int  n;         /* quantas paginas a sequencia tem         */
+} Sequencia;
+\end{verbatim}
+}
+
+A segunda guarda o que uma simulação produziu, para um algoritmo e um número de
+quadros:
+
+{\scriptsize
+\begin{verbatim}
+typedef struct {
+    char nome_algoritmo[32];
+    int  n_frames;
+    int  page_faults;
+    int  hits;
+} Resultado;
+\end{verbatim}
+}
+
+Como todos os algoritmos devolvem esse mesmo tipo, conseguimos juntar os
+resultados de todos eles em uma tabela só, sem tratar cada um de um jeito
+diferente.
+
+\subsection{Leitura da entrada}
+\label{sec:leitura}
+
+{\scriptsize
+\begin{verbatim}
+int  ler_sequencia(const char *caminho, Sequencia *seq);
+void liberar_sequencia(Sequencia *seq);
+\end{verbatim}
+}
+
+A \texttt{ler\_sequencia} abre o arquivo e guarda as páginas em um vetor de
+inteiros, aceitando os números separados por espaço ou por quebra de linha;
+retorna 0 se deu certo. A \texttt{liberar\_sequencia} libera esse vetor no fim
+do programa.
+
+\subsection{Impressão do traço}
+\label{sec:traco}
+
+{\scriptsize
+\begin{verbatim}
+void traco_linha(FILE *saida, int pagina, const int *frames,
+                 int n_frames, int houve_falta, int vitima);
+void traco_resumo(FILE *saida, const Resultado *r);
+\end{verbatim}
+}
+
+A \texttt{traco\_linha} imprime uma linha do traço a cada acesso: qual página foi
+pedida, como ficaram os quadros e se houve falta. A \texttt{traco\_resumo}
+imprime o total de faltas no final. Deixamos a impressão separada dos algoritmos
+para não repetir esse código cinco vezes.
+
+\subsection{Busca nos quadros}
+\label{sec:busca}
+
+{\scriptsize
+\begin{verbatim}
+int buscar_frame(const int *frames, int n_frames, int pagina);
+\end{verbatim}
+}
+
+Procura a página nos quadros e devolve a posição dela, ou $-1$ se ela não
+estiver na memória. É essa função que diz se houve acerto ou falta, e por isso
+ela é usada pelos cinco algoritmos.
+
+\subsection{Os cinco algoritmos}
+\label{sec:algoritmos}
+
+Todos recebem os mesmos parâmetros e devolvem o mesmo tipo, mudando só a regra de
+escolha da página que sai:
+
+{\scriptsize
+\begin{verbatim}
+Resultado simular_fifo(const Sequencia *seq, int n_frames, FILE *traco);
+Resultado simular_lru(const Sequencia *seq, int n_frames, FILE *traco);
+Resultado simular_otimo(const Sequencia *seq, int n_frames, FILE *traco);
+Resultado simular_segunda_chance(const Sequencia *seq, int n_frames, FILE *traco);
+Resultado simular_lfu(const Sequencia *seq, int n_frames, FILE *traco);
+\end{verbatim}
+}
+
+\begin{itemize}
+    \item \textbf{FIFO:} pensamos em guardar um índice que aponta para o próximo
+    quadro a ser substituído e ir avançando em círculo. Quando a página já está
+    na memória, nada muda: a ordem de saída continua a mesma.
+    \item \textbf{LRU:} a ideia é ter um contador que aumenta a cada acesso e
+    anotar, para cada quadro, o valor do contador no último uso dele. Na hora de
+    substituir, sai o quadro com o menor valor anotado. Assim não precisamos
+    varrer toda a sequência de novo a cada acesso.
+    \item \textbf{Ótimo:} como já temos a sequência inteira no vetor, dá para
+    olhar para frente e ver quando cada página da memória será usada de novo.
+    Sai a que demora mais, ou uma que não aparece mais. Vamos usar uma função
+    auxiliar \texttt{proximo\_uso(seq, posicao, pagina)} para isso.
+    \item \textbf{Segunda Chance:} além dos quadros, guardamos um bit para cada
+    página, que liga quando ela é acessada. Na substituição, se o bit da página
+    mais antiga estiver ligado, desligamos o bit e passamos para a próxima em vez
+    de tirá-la. Se todos os bits estiverem ligados, acaba funcionando igual ao
+    FIFO.
+    \item \textbf{LFU:} guardamos quantas vezes cada página foi acessada e
+    tiramos a de menor contagem. Em caso de empate, escolhemos a mais antiga,
+    seguindo a regra do FIFO.
+\end{itemize}
+
+\subsection{Programa principal}
+\label{sec:main}
+
+{\scriptsize
+\begin{verbatim}
+int main(int argc, char *argv[]);
+\end{verbatim}
+}
+
+Lê os parâmetros da linha de comando, carrega a sequência, escolhe qual função de
+simulação chamar e imprime o resultado. A escolha do algoritmo fica em um único
+ponto do código, para não espalhar condicionais pelo programa.
+
+\subsection{Script de análise}
+\label{sec:analise}
+
+{\scriptsize
+\begin{verbatim}
+def plotar_faltas_por_frames(dados, saida)
+def detectar_anomalia_belady(dados)
+\end{verbatim}
+}
+
+A \texttt{plotar\_faltas\_por\_frames} gera o gráfico com o número de quadros no
+eixo $x$ e as faltas no eixo $y$, com uma linha por algoritmo. A
+\texttt{detectar\_anomalia\_belady} compara os resultados de quadros
+consecutivos e avisa quando as faltas aumentaram, que é o caso da anomalia.
+
+% =====================================================================
+\section{Como o programa vai se comportar}
+\label{sec:comportamento}
+
+A execução vai ser por linha de comando, informando o arquivo de entrada, o
+número de quadros e o algoritmo, e a saída esperada é a seguinte:
+
+{\scriptsize
+\begin{verbatim}
+./paging-simulator --entrada entradas/sequencia1.txt --frames 3 --algoritmo fifo
+
+Ref: 7  Frames: [7,-,-]   FAULT
+Ref: 0  Frames: [7,0,-]   FAULT
+Ref: 1  Frames: [7,0,1]   FAULT
+Ref: 2  Frames: [2,0,1]   FAULT (substitui 7 - FIFO)
+Ref: 0  Frames: [2,0,1]   HIT
+...
+Algoritmo: FIFO | Frames: 3 | Referencias: 20 | Faltas: 15
+\end{verbatim}
+}
+
+Também vai existir uma opção para rodar todos os algoritmos de uma vez, com o
+número de quadros variando de 1 até um valor escolhido. Nesse modo o traço não é
+impresso; os resultados vão para um arquivo CSV que o script em Python usa para
+montar o gráfico.
+
+% =====================================================================
+\section{Testes que pretendemos fazer}
+\label{sec:testes}
+
+\begin{itemize}
+    \item Rodar a sequência de exemplo do enunciado com 3 e 4 quadros e conferir
+    o resultado à mão, para ter certeza de que a contagem está certa.
+    \item Rodar a sequência \texttt{1 2 3 4 1 2 5 1 2 3 4 5} no FIFO com 3 e
+    depois com 4 quadros, que é onde esperamos ver a Anomalia de Belády.
+    \item Rodar a mesma sequência no LRU e no Ótimo para mostrar que neles a
+    anomalia não aparece.
+    \item Gerar uma sequência maior, com páginas repetindo de tempos em tempos,
+    para comparar o Segunda Chance com o FIFO puro.
+    \item Variar o número de quadros de 1 até 30 em todos os algoritmos e montar
+    o gráfico final.
+\end{itemize}
+
+% =====================================================================
+\section{Divisão do trabalho}
+\label{sec:divisao}
+
+\begin{itemize}
+    \item \textbf{Etapa 1:} estrutura dos arquivos, leitura da entrada e
+    impressão do traço.
+    \item \textbf{Etapa 2:} FIFO e LRU, com os testes de conferência manual.
+    \item \textbf{Etapa 3:} Ótimo, Segunda Chance e LFU.
+    \item \textbf{Etapa 4:} script em Python, gráficos e escrita do relatório.
+\end{itemize}
+
+% =====================================================================
+\bibliographystyle{sbc}
+\bibliography{Referencias/referencias}
+
+\end{document}
