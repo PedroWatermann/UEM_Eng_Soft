@@ -3,5 +3,5 @@
 	url = https://github.com/PedroWatermann/AuAuControl.git
 	branch = master
 [submodule "2_ano/4_semestre/SistemasOperacionais/Trabalho/SimuladorDePaginacao"]
-	path = 2_ano/4_semestre/SistemasOperacionais/Trabalho/SimuladorDePaginacao
+	path = 2_ano/4_semestre/SistemasOperacionais/Trabalhos/SimuladorDePaginacao
 	url = https://github.com/PedroWatermann/SimuladorDePaginacao.git
