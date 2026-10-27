@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Funções, Objetos e Arrays</title>
+</head>
+<body>
+    <div>
+        <label id="ex01">Resultado multiplicação: </label>
+    </div>
+    <div>
+        <label id="ex02">Nome do dono atual: </label>
+    </div>
+    <div>
+        <label id="ex03">Itens com "F": </label>
+    </div>
+
+    <script>
+        function multiplica(x, y) {
+            document.getElementById('ex01').textContent += " " + x * y;
+        }
+
+        function Dono(nome, endereco) {
+            this.nome = nome || "";
+            this.endereco = endereco || "";
+        }
+        function Carro(marca, cor, ano, donos, donoAtual) {
+            this.marca = marca || "";
+            this.cor = cor || "";
+            this.ano = ano || 0;
+            this.donos = donos || [];
+            this.donoAtual = donoAtual || new Dono();
+        }
+
+        function ultimoDono(marca, cor, ano, donos, nome, endereco) {
+            let donoAtual = new Dono(nome, endereco);
+            let carro = new Carro(marca, cor, ano, donos, donoAtual);
+            document.getElementById('ex02').textContent += ` ${carro.donoAtual.nome}`;
+        }
+
+        function mostrarF() {
+            var carros = ["Gol", "Fusca", "Fox"];
+            carros.push('Brasilia');
+            carros.forEach((carro) => {
+                if (carro.toLocaleLowerCase().startsWith('f'))
+                    document.getElementById('ex03').textContent += ` ${carro},`;
+            });
+        }
+    </script>
+</body>
+    
+</html>
