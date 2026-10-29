@@ -6,3 +6,7 @@
 	path = 2_ano/4_semestre/SistemasOperacionais/Trabalhos/SimuladorDePaginacao
 	url = https://github.com/PedroWatermann/SimuladorDePaginacao.git
 	branch = master
+[submodule "2_ano/4_semestre/AnaliseProjetoSoftware/Desafios/OTruco"]
+	path = 2_ano/4_semestre/AnaliseProjetoSoftware/Desafios/OTruco
+	url = https://github.com/PedroWatermann/OTruco.git
+	branch = master
