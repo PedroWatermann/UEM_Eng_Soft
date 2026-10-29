@@ -7,6 +7,11 @@ on:
   repository_dispatch:
     types: [submodule-updated]
 
+# Evita duas execuções simultâneas (ex.: push nos dois submodules ao mesmo tempo)
+concurrency:
+  group: update-submodules
+  cancel-in-progress: false
+
 jobs:
   update:
     runs-on: ubuntu-latest
@@ -23,6 +28,29 @@ jobs:
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@users.noreply.github.com"
-          git add -A
-          git diff --cached --quiet || git commit -m "Atualiza submodules"
+
+          # Só adiciona os caminhos dos submodules
+          paths=$(git config -f .gitmodules --get-regexp '\.path$' | awk '{print $2}')
+          git add $paths
+
+          changed=$(git diff --cached --name-only)
+          if [ -z "$changed" ]; then
+            echo "Nenhum submodule mudou."
+            exit 0
+          fi
+
+          # Título: "Atualiza submodules: AuAuControl, SimuladorDePaginacao"
+          names=$(for p in $changed; do basename "$p"; done | paste -sd, | sed 's/,/, /g')
+
+          # Corpo: commits novos de cada submodule
+          body=""
+          for p in $changed; do
+            old=$(git rev-parse "HEAD:$p")
+            new=$(git -C "$p" rev-parse HEAD)
+            body+="$(basename "$p"): ${old:0:7} -> ${new:0:7}"$'\n'
+            body+="$(git -C "$p" log --format='  - %s' "$old..$new" 2>/dev/null || true)"$'\n\n'
+          done
+
+          git commit -m "Atualiza submodules: $names" -m "$body"
+          git pull --rebase
           git push
